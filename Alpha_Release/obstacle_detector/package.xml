@@ -1,0 +1,23 @@
+<package>
+  <name>obstacle_detector</name>
+  <version>0.1.0</version>
+  <description>
+  This package is generated from obstacle_detector Simulink model.
+  </description>
+  <maintainer email="zhengli233@email.arizona.edu">Zheng Li</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>rosgraph_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>rosgraph_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+</package>

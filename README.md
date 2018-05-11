@@ -21,3 +21,9 @@ Version Update Policies:
 2. The folder "Alpha_Release" will be our alpha release when we have an agreement. And after it is completed, it will not be changed anymore. 
 
 3. So are the beta release and final release.
+
+Authors:
+---------------------
+Kejia Li (jacob1230@email.arizona.edu)
+Zheng Li (zhengli233@email.arizona.edu)
+Harish Kumar Kothari, Abhishek (abhishek09@email.arizona.edu)
