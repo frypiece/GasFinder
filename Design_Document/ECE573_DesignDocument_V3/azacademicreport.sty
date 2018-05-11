@@ -1,0 +1,324 @@
+% $Id$
+%
+% Author: Jonathan Sprinkle, Ph.D.
+% A Report style file for productions from University of Arizona
+% well-suited for project reports or design documents.
+%
+% --------------------------------------------------------------- 
+% Based on latex8.sty by Paolo.Ienne@di.epfl.ch 
+% --------------------------------------------------------------- 
+% Preferred use with LaTeX2e is:
+%   \documentclass[12pt,onecolumn,titlepage]{article} 
+%   \usepackage{aztechreport}
+% --------------------------------------------------------------- 
+% specify references as
+%   \bibliographystyle{abbrv}
+%   \bibliography{...your .bib files...}
+%
+% --------------------------------------------------------------
+
+\usepackage{ifthen}
+\usepackage{acronym}
+
+\usepackage[colorlinks=true,bookmarks=false,linkcolor=black,urlcolor=blue,citecolor=black]{hyperref}
+\usepackage{url}
+\usepackage{lastpage}
+
+% load geometry package before fancyhdr, so it knows all the widths and everything
+\usepackage[top=1in,left=1in,right=1in,bottom=1in]{geometry}
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+
+% ten point helvetica bold required for captions
+% in some sites the name of the helvetica bold font may differ, 
+% change the name here:
+\font\tenhv  = phvb at 10pt
+
+% eleven point times bold required for second-order headings 
+\font\elvbf  = ptmb scaled 1100
+
+%Transfer argument of \author command to TeX commands
+%of the form \author@n
+\newcounter{author}
+\renewcommand{\author}[2][]{
+   \stepcounter{author}
+   \@namedef{author@\theauthor}{#2}
+   \@namedef{authorlabel@\theauthor}{#1}
+}
+
+\newcounter{address}
+\newcommand{\address}[2][]{
+   \stepcounter{address}
+   \@namedef{address@\theaddress}{#2}
+   \@namedef{addresslabel@\theaddress}{#1}
+}
+
+\newcommand{\alsep}{\\and\\}
+
+\newcommand{\email}[1]{\href{#1}{#1}}
+
+\newcommand{\shorttitle}[1]
+{
+	\@namedef{shorttitle}{#1}
+}
+
+\newcommand{\techreportnumber}[1]
+{
+	\@namedef{techreportnumber}{Technical Report \##1}
+}
+
+% why is conditional programming in \tex so hard to pick up....?
+\def\noteamname{0}
+\newcommand{\teamname}[1]
+{
+	\def\useteamname{1}
+	\@namedef{teamname}{Team Name: #1}
+}
+
+% set dimensions of columns, gap between columns, and paragraph indent 
+% \setlength{\textheight}{8.875in}
+% \setlength{\textwidth}{6.875in}
+% \setlength{\columnsep}{0.3125in}
+% \setlength{\topmargin}{0in}
+% \setlength{\headheight}{0in}
+% \setlength{\headsep}{0in}
+% \setlength{\parindent}{1pc}
+% \setlength{\oddsidemargin}{-.304in}
+% \setlength{\evensidemargin}{-.304in}
+
+%%%%% aztechreport
+% Definitions for creating the aztechreport title page...
+%\def\email#1{\gdef\@email{#1}}
+\def\faculty#1{\gdef\@faculty{#1}}
+\def\course#1{\gdef\@course{#1}}
+\def\term#1{\gdef\@term{#1}}
+% \def\teamname#1{\gdef\@teamname{#1}}
+
+\if@titlepage
+  \renewcommand\maketitle{\begin{titlepage}%
+
+	% fix all the header/footer stuff
+  \lhead{\scriptsize Department of Electrical and Computer Engineering}
+  \rhead{\scriptsize The University of Arizona}
+  \lfoot{\scriptsize \@nameuse{shorttitle}}
+  \cfoot{\scriptsize \thepage\ of \pageref{LastPage}}
+  \rfoot{\scriptsize \@course,~\@term}
+	
+
+  \let\footnotesize\small
+  \let\footnoterule\relax
+  \let \footnote \thanks
+  \null\vfil
+  \vskip 50\p@
+  \begin{center}%
+    \parbox[center][10 em][c]{\textwidth}{
+    \centering	\Huge \@title \par
+    }\\%
+%    \vskip 6 em%
+		\ifx\useteamname\noteamname
+			{
+			 	% nothing to see here
+				\vskip 6em%
+			}
+		\else
+				{
+					\parbox[center][4em][c]{\textwidth}{
+					\centering \Large \textbf{\@nameuse{teamname}} \par
+					}
+				}
+		\fi
+    {\large
+     \lineskip .75em%
+      \begin{tabular}[t]{c}%
+
+	   \newcounter{c@author}
+	    \newcounter{c@tmp}
+	    \ifthenelse{\value{author}=2}{%
+	      \newcommand{\liand}{ and }}{%
+	      \newcommand{\liand}{, and }}
+	    % Next add the authors
+	    \ifthenelse{\value{address}<2}{%
+	      %No address references required if there is only one
+	      \@nameuse{author@1}%
+	      \stepcounter{c@author}%
+	      \whiledo{\value{c@author}<\value{author}}{%
+	        \setcounter{c@tmp}{\value{author}}%
+	        \addtocounter{c@tmp}{-\value{c@author}}%
+	        \ifthenelse{\value{c@tmp}=1}{%
+	          \renewcommand{\alsep}{\liand}}{\renewcommand{\alsep}{}}%
+%	          \renewcommand{\alsep}{\liand}}{\renewcommand{\alsep}{, }}%
+%	        \stepcounter{c@author}\alsep \@nameuse{author@\thec@author}}\\%
+	        \stepcounter{c@author}\\ \@nameuse{author@\thec@author}}\\%
+	    }
+	    {%Add address references after the author's name
+	      \@nameuse{author@1}${}^{\ref{\@nameuse{authorlabel@1}}}$%
+	      \stepcounter{c@author}%
+	      \whiledo{\value{c@author}<\value{author}}{%
+	      \setcounter{c@tmp}{\value{author}}%
+	      \addtocounter{c@tmp}{-\value{c@author}}%
+	      \ifthenelse{\value{c@tmp}=1}{%
+	        \renewcommand{\alsep}{\liand}}{\renewcommand{\alsep}{, }}%
+	      \stepcounter{c@author}\alsep \@nameuse{author@\thec@author}%
+	        ${}^{\ref{\@nameuse{authorlabel@\thec@author}}}$%
+	      }
+	    }
+
+      \end{tabular}\par}%
+%        \href{\@email}{\@email}\par
+
+	\vfill
+	  \textbf{\@course}\par
+	  \textbf{\@term}\par
+    Instructor:\ \textbf{\@faculty}\par
+	\vskip 1em%
+    {\large \@date \par}%       % Set date in \large size.
+    \vskip 4em%
+%	\vfill
+    {
+		\begin{figure*}[h!]
+			\centering
+				\includegraphics[height=8 em]{UA_horiz_blk}
+			\label{fig:ucbseal_line_k}
+		\end{figure*}
+		\textsc{College of Engineering}
+		\vskip 0.6 em
+		\textsc{Department of Electrical \& Computer Engineering}\par
+		\textsc{Box 210104, Tucson, AZ 85721-0104}
+		}
+  \end{center}\par
+%  \vfill
+  \@thanks
+  %\vfil\null
+  \end{titlepage}%
+  \newpage
+  \tableofcontents
+  \thispagestyle{plain}
+  \newpage
+  \listoffigures
+  \thispagestyle{plain}
+  \newpage
+  \listoftables
+  \thispagestyle{plain}
+  \newpage
+  \setcounter{footnote}{0}%
+  \setcounter{page}{2}
+  \thispagestyle{plain}
+	\begin{center}
+	\huge {\@title} \par
+	\vspace{7 mm}
+	\large {\@author} \par
+	\vspace{5 mm}
+	\end{center}
+    \global\@topnum\z@   % Prevents figures from going at top of page.
+  \global\let\thanks\relax
+  \global\let\maketitle\relax
+  \global\let\@thanks\@empty
+  \global\let\@author\@empty
+  \global\let\@email\@empty
+  \global\let\@date\@empty
+  \global\let\@title\@empty
+  \global\let\@faculty\@empty
+  \global\let\title\relax
+  \global\let\author\relax
+  \global\let\email\relax
+  \global\let\date\relax
+  \global\let\and\relax
+  \global\let\faculty\relax
+}
+\else
+\renewcommand\maketitle{\par
+  \begingroup
+    \renewcommand\thefootnote{\@fnsymbol\c@footnote}%
+    \def\@makefnmark{\rlap{\@textsuperscript{\normalfont\@thefnmark}}}%
+    \long\def\@makefntext##1{\parindent 1em\noindent
+            \hb@xt@1.8em{%
+                \hss\@textsuperscript{\normalfont\@thefnmark}}##1}%
+    \if@twocolumn
+      \ifnum \col@number=\@ne
+        \@maketitle
+      \else
+        \twocolumn[\@maketitle]%
+      \fi
+    \else
+      \newpage
+      \global\@topnum\z@   % Prevents figures from going at top of page.
+      \@maketitle
+    \fi
+    \thispagestyle{plain}\@thanks
+  \endgroup
+  \setcounter{footnote}{0}%
+  \global\let\thanks\relax
+  \global\let\maketitle\relax
+  \global\let\@maketitle\relax
+  \global\let\@thanks\@empty
+  \global\let\@author\@empty
+  \global\let\@date\@empty
+  \global\let\@title\@empty
+  \global\let\@faculty\@empty
+  \global\let\@email\@empty
+  \global\let\title\relax
+  \global\let\author\relax
+  \global\let\date\relax
+  \global\let\and\relax
+  \global\let\faculty\relax
+  \global\let\email\relax
+}
+\def\@maketitle{%
+  \newpage
+  \null
+  \vskip 2em%
+  \begin{center}%
+  \let \footnote \thanks
+    {\Huge \@title \par}%
+    \vskip 1.5em%
+    {\large
+      \lineskip .5em%
+      \begin{tabular}[t]{c}%
+        \@author
+      \end{tabular}\par}%
+    \vskip 1em%
+    {\large \@date}%
+  \end{center}%
+  \par
+  \vskip 1.5em}
+\fi
+
+\def\abstract
+   {%
+   \centerline{\large\bf Abstract}%
+   \it%
+   \par%
+   \noindent
+   }
+
+\def\endabstract
+   {
+   % additional empty line at the end of the abstract 
+   \par 
+   }
+
+\def\affiliation#1{\gdef\@affiliation{#1}} \gdef\@affiliation{}
+
+\def\email#1{\gdef\@email{#1}}
+\gdef\@email{}
+
+\newlength{\@ctmp}
+\newlength{\@figindent}
+\setlength{\@figindent}{1pc}
+
+\long\def\@makecaption#1#2{
+   \vskip 10pt
+   \setbox\@tempboxa\hbox{\tenhv\noindent #1.~#2} 
+   \setlength{\@ctmp}{\hsize}
+   \addtolength{\@ctmp}{-\@figindent}\addtolength{\@ctmp}{-\@figindent} 
+   % IF longer than one indented paragraph line
+   \ifdim \wd\@tempboxa >\@ctmp
+      % THEN set as an indented paragraph
+      \begin{list}{}{\leftmargin\@figindent \rightmargin\leftmargin} 
+         \item[]\tenhv #1.~#2\par
+      \end{list}
+   \else
+      % ELSE center
+      \hbox to\hsize{\hfil\box\@tempboxa\hfil} 
+   \fi}
+
